@@ -10,38 +10,35 @@
             <UILanguage>en-US</UILanguage>
             <UserLocale>en-US</UserLocale>
         </component>
+        <component name="Microsoft-Windows-PnpCustomizationsWinPE" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+            <DriverPaths>
+                <PathAndCredentials wcm:action="add" wcm:keyValue="A">
+                    <!-- pvscsi-Windows8.flp -->
+                    <Path>A:\</Path>
+                </PathAndCredentials>
+            </DriverPaths>
+        </component>
         <component name="Microsoft-Windows-Setup" processorArchitecture="amd64" publicKeyToken="31bf3856ad364e35" language="neutral" versionScope="nonSxS" xmlns:wcm="http://schemas.microsoft.com/WMIConfig/2002/State" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
             <DiskConfiguration>
                 <Disk wcm:action="add">
+                    <DiskID>0</DiskID>
+                    <WillWipeDisk>true</WillWipeDisk>
                     <CreatePartitions>
                         <CreatePartition wcm:action="add">
                             <Order>1</Order>
-                            <Size>500</Size>
-                            <Type>Primary</Type>
-                        </CreatePartition>
-                        <CreatePartition wcm:action="add">
-                            <Order>2</Order>
                             <Extend>true</Extend>
                             <Type>Primary</Type>
                         </CreatePartition>
                     </CreatePartitions>
                     <ModifyPartitions>
-                        <ModifyPartition wcm:action="add">
+                        <ModifyPartition wcm:action="modify">
                             <Order>1</Order>
                             <PartitionID>1</PartitionID>
                             <Format>NTFS</Format>
-                            <Label>Boot</Label>
+                            <Label>System</Label>
                             <Active>true</Active>
                         </ModifyPartition>
-                        <ModifyPartition wcm:action="add">
-                            <Order>2</Order>
-                            <PartitionID>2</PartitionID>
-                            <Format>NTFS</Format>
-                            <Label>System</Label>
-                        </ModifyPartition>
                     </ModifyPartitions>
-                    <DiskID>0</DiskID>
-                    <WillWipeDisk>true</WillWipeDisk>
                 </Disk>
             </DiskConfiguration>
             <ImageInstall>
@@ -54,7 +51,7 @@
                     </InstallFrom>
                     <InstallTo>
                         <DiskID>0</DiskID>
-                        <PartitionID>2</PartitionID>
+                        <PartitionID>1</PartitionID>
                     </InstallTo>
                     <WillShowUI>OnError</WillShowUI>
                     <InstallToAvailablePartition>false</InstallToAvailablePartition>
@@ -130,9 +127,9 @@
                     <Description>Enable RDP</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
-                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\set-temp.ps1</CommandLine>
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\addNewWindowsUser.ps1</CommandLine>
                     <Order>70</Order>
-                    <Description>Set Temp Folders</Description>
+                    <Description>Add WinRM User</Description>
                 </SynchronousCommand>
                 <SynchronousCommand wcm:action="add">
                     <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\disable-all-fw.ps1</CommandLine>

@@ -21,13 +21,13 @@ source "amazon-ebs" "Aws-Win2k19" {
   security_group_id           = "${var.aws_security_group_id}"
   source_ami                  =  data.amazon-ami.Aws-Win2k19.id
   subnet_id                   = "${var.aws_subnet_id}"
-  user_data_file              = "../scripts/awsUserData.ps1"
+  user_data_file              = "../scripts/awsUserDataOrg.ps1"
   vpc_id                      = "${var.aws_vpc_id}"
   winrm_insecure              = true
   winrm_username              = "${var.new_ansible_user}"
   winrm_password              = "${var.new_ansible_password}"
   winrm_port                  = 5986
-  winrm_timeout               = "15m"
+  winrm_timeout               = "30m"
   winrm_use_ssl               = true
 }
 
@@ -108,14 +108,57 @@ source "vsphere-iso" "vSphere-Win2k19" {
   winrm_username = "${var.new_ansible_user}"
 }
 
+## Windows 2022
+
+source "vsphere-iso" "vSphere-Win2k22" {
+  CPUs                 = "${var.vsphere_win2k22_vm_cpu_num}"
+  RAM                  = "${var.vsphere_win2k22_vm_mem_size}"
+  RAM_reserve_all      = false
+  boot_command         = ["w"]
+  boot_wait            = "3s"
+  cluster              = "${var.vc_cluster}"
+  cdrom_type           = "sata"
+  communicator         = "winrm"
+  convert_to_template  = "true"
+  datacenter           = "${var.vc_datacenter}"
+  datastore            = "${var.vc_datastore}"
+  disk_controller_type = ["pvscsi"]
+  firmware             = "efi"
+  floppy_files         = ["../config/Win2k22/autounattend.xml","../scripts/addNewWindowsUser.ps1", "../scripts/disable-network-discovery.cmd", "../scripts/enable-rdp.cmd", "../scripts/enable-winrm.ps1", "../scripts/install-vm-tools.cmd", "../scripts/disable-all-fw.ps1","../drivers/pvscsi.cat", "../drivers/pvscsi.inf", "../drivers/pvscsi.sys", "../drivers/pvscsiver.dll"]
+  folder               = "${var.vc_folder}"
+  guest_os_type        = "windows2019srvNext_64Guest"
+  insecure_connection  = "true"
+  iso_checksum        = "${var.iso_checksum}"
+  iso_paths            = ["[] /vmimages/tools-isoimages/windows.iso"]
+  iso_url             = "${var.iso_url}"
+  network_adapters {
+    network      = "${var.vc_network}"
+    network_card = "vmxnet3"
+  }
+  password     = "${var.vc_password}"
+  remove_cdrom = true
+  storage {
+    disk_size             = "${var.vsphere_win2k22_vm_disk_size}"
+    disk_thin_provisioned = true
+  }
+  username       = "${var.vc_username}"
+  vcenter_server = "${var.vc_server}"
+  vm_name        = "${var.vsphere_win2k22_vm_name_prefix}-${var.BUILDTIME}"
+  winrm_password = "${var.new_ansible_password}"
+  winrm_username = "${var.new_ansible_user}"
+  vm_version     = 18
+}
+
+
 # a build block invokes sources and runs provisioning steps on them. The
 # documentation for build blocks can be found here:
 # https://www.packer.io/docs/templates/hcl_templates/blocks/build
 build {
   # sources = ["source.amazon-ebs.Aws-Win2k19", "source.vsphere-iso.vSphere-CentOS8", "source.vsphere-iso.vSphere-Win2k19"]
-  sources = ["source.amazon-ebs.Aws-Win2k19"]
-# WORKS!  sources = ["source.vsphere-iso.vSphere-Win2k19"]
+# sources = ["source.amazon-ebs.Aws-Win2k19"]
+# sources = ["source.vsphere-iso.vSphere-Win2k19"]
 # sources = ["source.vsphere-iso.vSphere-CentOS8"]
+sources = ["vsphere-iso.vSphere-Win2k22"]
 
 # needs rework
   provisioner "shell" {
@@ -138,25 +181,46 @@ build {
   #   script            = "../scripts/disable-windows-updates.ps1"
   # }
 
-  # provisioner "powershell" {
-  #   environment_vars = ["newAdminPassword=${var.new_win_admin_password}"]
-  #   only             = ["Aws-Win2k19"]
-  #   scripts          = ["../scripts/disable-windows-updates.ps1", "../scripts/changeAdminPassword.ps1"]
-  # }
-  # provisioner "windows-restart" {}
+#   provisioner "powershell" {
+#     environment_vars = ["newAdminPassword=${var.new_win_admin_password}"]
+#     only             = ["Aws-Win2k19"]
+#     scripts          = ["../scripts/disable-windows-updates.ps1", "../scripts/changeAdminPassword.ps1"]
+#   }
 
-  # provisioner "windows-update" { pause_before = "1m" }
-#     filters         = ["exclude:$_.Title -like '*Preview*'", "include:$true"]
-#     only            = ["vSphere-Win2k19"]
-# #    only            = ["vSphere-Win2k19", "Aws-Win2k19"]
-#     search_criteria = "IsInstalled=0"
-#     update_limit    = 25
-#  }
-
-  post-processor "manifest" {
-    output     = "/build/manifest.json"
-    strip_path = true
+#     provisioner "powershell" {
+# #     only             = ["vSphere-Win2k19"]
+#     scripts          = ["../scripts/disable-windows-updates.ps1"]
+#   }
+  
+    provisioner "windows-update" { 
+    pause_before = "5m" 
+    only            = ["vsphere-iso.vSphere-Win2k19","vsphere-iso.vSphere-Win2k22"]
   }
+
+      provisioner "windows-update" { 
+      pause_before = "5m" 
+      only            = ["vsphere-iso.vSphere-Win2k19","vsphere-iso.vSphere-Win2k22"]
+  }
+
+  #     provisioner "windows-update" { 
+  #     pause_before = "5m" 
+  #     only            = ["vsphere-iso.vSphere-Win2k19"]
+  # }
+
+  # provisioner "windows-update" { 
+  #   pause_before = "1m" 
+  #   search_criteria = "IsInstalled=0"
+  #   filters         = ["exclude:$_.Title -like '*Preview*'", 
+  #                     "include:$true",]
+  #   # only            = ["vSphere-Win2k19"]
+  #   only            = ["vSphere-Win2k19", "Aws-Win2k19"]
+  #   update_limit    = 25
+  # }
+
+  # post-processor "manifest" {
+  #   output     = "/build/manifest.json"
+  #   strip_path = true
+  # }
 
 }
 
