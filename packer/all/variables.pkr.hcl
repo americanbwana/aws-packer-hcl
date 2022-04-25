@@ -10,6 +10,10 @@ variable "aws_secret_key" {
 variable "aws_w2k19_vm_name_prefix" {
     default = "Aws-W2k19"
 }
+
+variable "aws_w2k22_vm_name_prefix" {
+    default = "Aws-W2k22"
+}
 variable "aws_region" {
     default="us-east-2"
 }
@@ -47,10 +51,17 @@ variable "linux_root_password" {
 }
 # vSphere variables
 variable "vsphere_centos8_iso" {
-    default = "[datastore1] ISOs/CentOS-8.2.2004-x86_64-minimal.iso"
+    default = "[datastore1] ISO/Rocky-8.5-x86_64-minimal.iso"
 }
 variable "vsphere_centos8_checksum" {
-    default = "47ab14778c823acae2ee6d365d76a9aed3f95bb8d0add23a06536b58bb5293c0"
+    default = "c4eb2ae6b06876205f2209e4504110fe4115b37540c21ecfbbc0ebc11084cb779"
+}
+
+variable "vsphere_rocky8_iso" {
+    default = "[datastore1] ISO/Rocky-8.5-x86_64-minimal.iso"
+}
+variable "vsphere_rocky8_checksum" {
+    default = "c4eb2ae6b06876205f2209e4504110fe4115b37540c21ecfbbc0ebc11084cb779"
 }
 
 variable "vc_username" {
@@ -90,10 +101,14 @@ variable "vsphere_win2k19_vm_disk_size" {
     default = 100
 }
 variable "vsphere_centos8_vm_name_prefix" {
-    default = "vSphere-CentOS8"
+    default = "vSphere-CentOS8-Custom"
+}
+
+variable "vsphere_rocky8_vm_name_prefix" {
+    default = "vSphere-Rocky8-Custom"
 }
 variable "vsphere_win2k19_vm_name_prefix" {
-    default = "vSphere-W2k19"
+    default = "vSphere-W2k19-Custom"
 }
 
 variable "vsphere_win2k22_vm_cpu_num" {
@@ -124,4 +139,6 @@ variable "iso_url" {
   description = "The download url for the installation ISO"
 }
 
-variable "http_server" {}
+variable "http_server" {
+    default ="http://192.168.1.200/repo/packer"
+}

@@ -1,24 +1,6 @@
-yum install -y cloud-init perl open-vm-tools bash-completion yum-utils
-cloud-init clean
-yum clean all
-
-cat << MOTD > /etc/motd
-                  ╓╦╦╖
-                ╦╬╜  ╙╬╦
-                ╚╬╦    ╙╬╦
-           ╓╦╦╦╦  ╙╬╦    ╙╬╦             Built by:
-         ╓╬╩    ╚╬╖ ╙╬╦     ╚╬╖                 ____            _ _
-       ╓╦ └╬╦     ╙╬╦ ╙╬╦     ╙╬╦        __   _|  _ \\ ___  __ _| (_)_______
-     ╔╬╨╙╬╦  ╚╬╖    ╙╬╦  ╚╬╖    ╙╬╦      \\ \\ / / |_) / _ \\/ _\` | | |_  / _ \\
-   ╦╬╜    ╙╬╦  ╙╬╦    ╙╬╦  ╙╬╦    ╙╬╦     \\ V /|  _ <  __/ (_| | | |/ /  __/
- ╔╬╙        └╩╦╖ ╙╬╦    ╙╩╦╖ ╙╬╦    ╙╬╦    \\_/ |_| \\_\\___|\\__,_|_|_/___\\___|    _   _
- ╚╬          ╦╬╜ ╓╬╩     ╦╬╜ ╓╬╩     ╬╩     / \\  _   _| |_ ___  _ __ ___   __ _| |_(_) ___  _ __
-  └╚╦╖     ╦╬╙ ╓╬╩    ┌╦╩╙ ╔╬╩    ╓╦╩╙     / _ \\| | | | __/ _ \\| '_ \` _ \\ / _\` | __| |/ _ \\| '_ \\
-     ╚╬╦╓╬╩╙ ╔╬╨    ╓╬╩  ╔╬╨    ╓╬╩─      / ___ \\ |_| | || (_) | | | | | | (_| | |_| | (_) | | | |
-       ╙╩  ╦╬╜    ╓╬╩  ╦╬╜    ╓╬╩        /_/   \\_\\__,_|\\__\\___/|_| |_| |_|\\__,_|\\__|_|\\___/|_| |_|
-         ╘╬╬    ╔╬╨ ╓╦╩     ╔╬╨
-           ╙╬╦╦╩╜ ╓╬╩     ╦╬╜            Code Stream Packer Build - CentOS 8
-                ╔╬╩    ╓╦╩╙
-                ╩╬╖  ╓╬╩
-                  ╙╩╩╨
-MOTD
+sudo dnf install -y cloud-init bash-completion yum-utils epel-release
+sudo dnf update -y 
+sudo dnf install -y neofetch
+sudo bash -c $'echo "neofetch" >> /etc/profile.d/mymotd.sh && chmod +x /etc/profile.d/mymotd.sh'
+sudo cloud-init clean
+sudo dnf clean all
