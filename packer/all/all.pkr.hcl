@@ -184,11 +184,13 @@ source "vsphere-iso" "vSphere-Win2k22" {
 # a build block invokes sources and runs provisioning steps on them. The
 # documentation for build blocks can be found here:
 # https://www.packer.io/docs/templates/hcl_templates/blocks/build
+# will use sources from local file.
+# need to append 'source.builder' to each one with PKR 1.8
 build {
   # sources = ["source.amazon-ebs.Aws-Win2k19", "source.vsphere-iso.vSphere-CentOS8", "source.vsphere-iso.vSphere-Win2k19"]
-# sources = ["source.amazon-ebs.Aws-Win2k22"]
+sources = ["source.amazon-ebs.Aws-Win2k22","source.amazon-ebs.Aws-Win2k19"]
 # sources = ["source.vsphere-iso.vSphere-Win2k19"]
-sources = ["source.vsphere-iso.vSphere-Rocky8"]
+# sources = ["source.vsphere-iso.vSphere-Rocky8"]
 # sources = ["vsphere-iso.vSphere-Win2k22"]
 
 
