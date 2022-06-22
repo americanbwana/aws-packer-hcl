@@ -64,6 +64,17 @@ variable "vsphere_rocky8_checksum" {
     default = "c4eb2ae6b06876205f2209e4504110fe4115b37540c21ecfbbc0ebc11084cb779"
 }
 
+variable "vsphere_rhel8_vm_name_prefix" {
+    default = "vSphere-Rhel8-Custom"
+}
+variable "vsphere_rhel8_iso" {
+    default = "[datastore1] ISO/rhel-8.6-x86_64-dvd.iso"
+}
+
+variable "vsphere_rhel8_checksum" {
+    default = "c324f3b07283f9393168f0a4ad2167ebbf7e4699d65c9670e0d9e58ba4e2a9a8"
+}
+
 variable "vc_username" {
     default = "administrator@vsphere.local"
 }

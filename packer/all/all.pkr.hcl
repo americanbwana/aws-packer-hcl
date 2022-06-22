@@ -63,6 +63,101 @@ source "amazon-ebs" "Aws-Win2k22" {
   winrm_use_ssl               = true
 }
 
+source "vsphere-iso" "vSphere-Rhel8" {
+  CPUs                 = "2"
+  RAM                  = "4096"
+  RAM_reserve_all      = false
+  boot_command         = ["e<down><down><end><bs><bs><bs><bs><bs>text inst.ks=${var.http_server}/rhel8.cfg<leftCtrlOn>x<leftCtrlOff>"]
+  boot_order           = "disk,cdrom"
+  boot_wait            = "5s"
+  cluster              = "${var.vc_cluster}"
+  convert_to_template  = "true"
+  # cdrom_type           = "sata"
+  create_snapshot      = "false"
+  datastore            = "${var.vc_datastore}"
+  disk_controller_type = ["pvscsi"]
+  firmware             = "efi"
+  # floppy_files         = ["../config/centos8.cfg"]
+  folder               = "${var.vc_folder}"
+  guest_os_type        = "rhel8_64Guest"
+  # host                 = "${var.vcenter_host}"
+  insecure_connection  = "true"
+  iso_checksum         = "${var.vsphere_rhel8_checksum}"
+  iso_paths            = ["${var.vsphere_rhel8_iso}"]
+  network_adapters {
+    network      = "${var.vc_network}"
+    network_card = "vmxnet3"
+  }
+  # notes            = "Default SSH User: ${var.ssh_username}\nDefault SSH Pass: ${var.ssh_password}\nBuilt by Packer @ ${legacy_isotime("2006-01-02 03:04")}."
+
+  remove_cdrom     = "true"
+  # need to change username and password in config/centos8.cfg
+  shutdown_command = "echo '${var.new_ansible_password}' | sudo -S -E shutdown -P now"
+  # ssh_password     = "${var.ssh_password}"
+  ssh_password     = "${var.new_ansible_password}"
+  ssh_username     = "${var.new_ansible_user}"
+  storage {
+    disk_size             = "92160"
+    disk_thin_provisioned = true
+  }
+  username       = "${var.vc_username}"
+  password         = "${var.vc_password}"
+  vcenter_server = "${var.vc_server}"
+  vm_name        = "${var.vsphere_rhel8_vm_name_prefix}-${var.BUILDTIME}"
+}
+
+source "vsphere-iso" "Aws-Rhel8" {
+  CPUs                 = "2"
+  RAM                  = "4096"
+  RAM_reserve_all      = false
+  boot_command         = ["e<down><down><end><bs><bs><bs><bs><bs>text inst.ks=${var.http_server}/awsrhel8.cfg<leftCtrlOn>x<leftCtrlOff>"]
+  boot_order           = "disk,cdrom"
+  boot_wait            = "5s"
+  cluster              = "${var.vc_cluster}"
+  communicator          = "ssh"
+  configuration_parameters = {
+    "disk.EnableUUID" = "TRUE"
+  }
+  convert_to_template  = "false"
+  # cdrom_type           = "sata"
+  create_snapshot      = "false"
+  datastore            = "${var.vc_datastore}"
+  disk_controller_type = ["lsilogic"]
+  export {
+    force = true
+    output_directory = "./output_vsphere"
+  }
+  firmware             = "efi"
+  # floppy_files         = ["../config/centos8.cfg"]
+  folder               = "${var.vc_folder}"
+  guest_os_type        = "rhel8_64Guest"
+  # host                 = "${var.vcenter_host}"
+  insecure_connection  = "true"
+  iso_checksum         = "${var.vsphere_rhel8_checksum}"
+  iso_paths            = ["${var.vsphere_rhel8_iso}"]
+  network_adapters {
+    network      = "${var.vc_network}"
+    network_card = "e1000"
+  }
+  notes            = "Test for AWS import of custom build.  packer / br0wNGoffer$"
+
+  remove_cdrom     = "true"
+  # need to change username and password in config/centos8.cfg
+  shutdown_command = "sudo shutdown -h now"
+  shutdown_timeout  = "45m"
+  # ssh_password     = "${var.ssh_password}"
+  ssh_password     = "${var.new_ansible_password}"
+  ssh_username     = "${var.new_ansible_user}"
+  storage {
+    disk_size             = "92160"
+    disk_thin_provisioned = true
+  }
+  username       = "${var.vc_username}"
+  password         = "${var.vc_password}"
+  vcenter_server = "${var.vc_server}"
+  vm_name        = "${var.vsphere_rhel8_vm_name_prefix}-${var.BUILDTIME}"
+}
+
 source "vsphere-iso" "vSphere-Rocky8" {
   CPUs                 = "2"
   RAM                  = "2048"
@@ -192,7 +287,9 @@ build {
     "source.amazon-ebs.Aws-Win2k22",
     "source.vsphere-iso.vSphere-Win2k22",
     "source.vsphere-iso.vSphere-Win2k19",
-    "source.vsphere-iso.vSphere-Rocky8"
+    "source.vsphere-iso.vSphere-Rocky8",
+    "source.vsphere-iso.vSphere-Rhel8",
+    "source.vsphere-iso.Aws-Rhel8"
   ]
   # sources = ["source.amazon-ebs.Aws-Win2k19", "source.vsphere-iso.vSphere-CentOS8", "source.vsphere-iso.vSphere-Win2k19"]
 # sources = ["source.amazon-ebs.Aws-Win2k22","source.amazon-ebs.Aws-Win2k19"]
@@ -236,25 +333,32 @@ build {
       only            = ["vsphere-iso.vSphere-Win2k19","amazon-ebs.Aws-Win2k22","vsphere-iso.vSphere-Win2k22"]
   }
 
-  #     provisioner "windows-update" { 
-  #     pause_before = "5m" 
-  #     only            = ["vsphere-iso.vSphere-Win2k19"]
-  # }
+  # export Rhel8 into AWS
+  post-processor "amazon-import" {
+    only = ["vsphere-iso.Aws-Rhel8"]
+    region = "us-east-2"
+    s3_bucket_name = "resident-packer-image-bucket"
+    license_type = "BYOL"
+    role_name = "dag-vm-import-role"
+    format = "vmdk"
+    boot_mode = "uefi"
 
-  # provisioner "windows-update" { 
-  #   pause_before = "1m" 
-  #   search_criteria = "IsInstalled=0"
-  #   filters         = ["exclude:$_.Title -like '*Preview*'", 
-  #                     "include:$true",]
-  #   # only            = ["vSphere-Win2k19"]
-  #   only            = ["vSphere-Win2k19", "Aws-Win2k19"]
-  #   update_limit    = 25
-  # }
-
-  # post-processor "manifest" {
-  #   output     = "/build/manifest.json"
-  #   strip_path = true
-  # }
+  }
+  # [
+  #    [
+  #       {
+  #         "type": "amazon-import",
+  #         "access_key": "YOUR KEY HERE",
+  #         "secret_key": "YOUR SECRET KEY HERE",
+  #         "region": "us-east-1",
+  #         "s3_bucket_name": "importbucket",
+  #         "license_type": "BYOL",
+  #         "tags": {
+  #           "Description": "packer amazon-import {{timestamp}}"
+  #         }
+  #      }
+  #   ]
+  # ]
 
 }
 

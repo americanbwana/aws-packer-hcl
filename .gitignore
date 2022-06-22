@@ -10,4 +10,6 @@ crash.log
 # No variables / env files
 variables.txt
 
+# ignore output_vsphere
+packer/all/output_vsphere
 
