@@ -7,6 +7,19 @@ variable "aws_access_key_id" {
 variable "aws_secret_key" {
     sensitive = true
 }
+
+variable "amazon_import_key_id" {
+    sensitive = true
+}
+
+variable "amazon_import_secret" {
+    sensitive = true
+}
+
+variable "amazon_import_s3_bucket" {
+    default = "packer-import-example"
+}
+
 variable "aws_w2k19_vm_name_prefix" {
     default = "Aws-W2k19"
 }
@@ -15,7 +28,7 @@ variable "aws_w2k22_vm_name_prefix" {
     default = "Aws-W2k22"
 }
 variable "aws_region" {
-    default="us-east-2"
+    default="us-east-1"
 }
 variable "aws_vpc_id" {
     default = "vpc-1234"
@@ -68,11 +81,17 @@ variable "vsphere_rhel8_vm_name_prefix" {
     default = "vSphere-Rhel8-Custom"
 }
 variable "vsphere_rhel8_iso" {
-    default = "[datastore1] ISO/rhel-8.6-x86_64-dvd.iso"
+    default = "[datastore1] ISO/rhel-8.4-x86_64-dvd.iso"
 }
 
+# RHEL 8.6
+# variable "vsphere_rhel8_checksum" {
+#     default = "c324f3b07283f9393168f0a4ad2167ebbf7e4699d65c9670e0d9e58ba4e2a9a8"
+# }
+
+# RHEL 8.4
 variable "vsphere_rhel8_checksum" {
-    default = "c324f3b07283f9393168f0a4ad2167ebbf7e4699d65c9670e0d9e58ba4e2a9a8"
+    default = "48f955712454c32718dcde858dea5aca574376a1d7a4b0ed6908ac0b85597811"
 }
 
 variable "vc_username" {

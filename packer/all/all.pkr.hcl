@@ -110,7 +110,8 @@ source "vsphere-iso" "Aws-Rhel8" {
   CPUs                 = "2"
   RAM                  = "4096"
   RAM_reserve_all      = false
-  boot_command         = ["e<down><down><end><bs><bs><bs><bs><bs>text inst.ks=${var.http_server}/awsrhel8.cfg<leftCtrlOn>x<leftCtrlOff>"]
+  # boot_command         = ["e<down><down><end><bs><bs><bs><bs><bs>text inst.ks=${var.http_server}/awsrhel8.cfg<leftCtrlOn>x<leftCtrlOff>"]
+  boot_command         = ["<tab> text inst.ks=${var.http_server}/awsrhel8.cfg<enter><wait>"]
   boot_order           = "disk,cdrom"
   boot_wait            = "5s"
   cluster              = "${var.vc_cluster}"
@@ -127,7 +128,7 @@ source "vsphere-iso" "Aws-Rhel8" {
     force = true
     output_directory = "./output_vsphere"
   }
-  firmware             = "efi"
+  firmware             = "bios"
   # floppy_files         = ["../config/centos8.cfg"]
   folder               = "${var.vc_folder}"
   guest_os_type        = "rhel8_64Guest"
@@ -305,6 +306,13 @@ build {
     scripts         = ["../scripts/ssh_config.sh", "../scripts/centos_8.sh"]
   }
 
+  # Run script on Aws-RHEL8 to disable vmtools and clean up for first boot
+    provisioner "shell" {
+    # execute_command = "echo '${var.new_ansible_password}' | {{ .Vars }} sudo -E -S sh '{{ .Path }}'"
+    only            = ["vsphere-iso.Aws-Rhel8"]
+    scripts         = ["../scripts/aws_rhel8.sh"]
+  }
+
   # provisioner "powershell" {
   #   elevated_password = "${var.new_ansible_password}"
   #   elevated_user     = "${var.new_ansible_user}"
@@ -334,16 +342,22 @@ build {
   }
 
   # export Rhel8 into AWS
-  post-processor "amazon-import" {
-    only = ["vsphere-iso.Aws-Rhel8"]
-    region = "us-east-2"
-    s3_bucket_name = "resident-packer-image-bucket"
-    license_type = "BYOL"
-    role_name = "dag-vm-import-role"
-    format = "vmdk"
-    boot_mode = "uefi"
+  # post-processor "amazon-import" {
+  #   only = ["vsphere-iso.Aws-Rhel8"]
+  #   region = "us-east-1"
+  #   access_key = "${var.amazon_import_key_id}"
+  #   secret_key = "${var.amazon_import_secret}"
+  #   s3_bucket_name = "${var.amazon_import_s3_bucket}"
+  #   license_type = "BYOL"
+  #   role_name = "vmimport"
+  #   format = "vmdk"
+  #   boot_mode = "legacy-bios"
+  #   ami_name = "${var.vsphere_rhel8_vm_name_prefix}-${var.BUILDTIME}"
+  #   tags = {
+  #     "source": "Packer-Import"
+  #   }
 
-  }
+  # }
   # [
   #    [
   #       {
