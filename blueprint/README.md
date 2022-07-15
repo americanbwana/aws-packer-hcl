@@ -1,0 +1,1 @@
+# vRealize Automation Cloud sample blueprint

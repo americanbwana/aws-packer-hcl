@@ -1,16 +1,20 @@
-# readme
+# Readme
 This working repository holds packer configuration files to build images
 for vRealize Automation Cloud.
 
-## Directory structure
+# Credits
+To many to mention.
+
+# Directory structure
 - Cloud-init. Cloud-init examples.
 - blueprint. vRealize Automation Cloud blueprint examples.
 - docker. Dockerfile to build image for Image as Code pipeline.
 - packer. Packer files to build.
 
-## Required Environmental Variables
-# AWS 
-Wait an hour for long running AWS processes.
+# Required Environmental Variables
+As recorded in environment.env in root directory
+## AWS 
+### Wait an hour for long running AWS processes.
 AWS_MAX_ATTEMPTS=30
 AWS_POLL_DELAY_SECONDS=120
 export PKR_VAR_aws_secret_key="changeme"
@@ -18,14 +22,14 @@ export PKR_VAR_aws_vpc_id="vpc-changeme"
 export PKR_VAR_aws_security_group_id="sg-changeme" 
 export PKR_VAR_aws_region="changeme" 
 export PKR_VAR_aws_subnet_id="changeme" 
-export PKR_VAR_aws_public_ip_address="changeme" 
+export PKR_VAR_aws_public_ip_address="true" 
 
-# AWS import 
+## AWS import used to import the finished VMDK into AWS
 export PKR_VAR_amazon_import_secret="changeme" 
 export PKR_VAR_amazon_import_key_id="changeme"
 export PKR_VAR_amazon_import_s3_bucket="changeme" 
 
-# General 
+## General settings
 PACKER_LOG=1 
 export PKR_VAR_BUILDTIME="$(date "+%Y%m%d-%H%M%S")"
 export PKR_VAR_new_ansible_password="changeme"
@@ -34,12 +38,12 @@ export PKR_VAR_iso_checksum="changeme"
 export PKR_VAR_iso_url="changeme" 
 export PKR_VAR_http_server="changeme"  
 
-# Linux settings 
+## Linux settings 
 export PKR_VAR_ssh_user="changeme"
 export PKR_VAR_ssh_password="changeme"
 export PKR_VAR_linux_root_password="changeme"
 
-# vSphere 
+## vSphere settings
 export PKR_VAR_vsphere_centos8_iso="changeme"
 export PKR_VAR_vsphere_centos8_checksum="changeme"
 export PKR_VAR_vsphere_rocky8_iso="changeme"
@@ -56,8 +60,7 @@ export PKR_VAR_vc_folder="changeme"
 export PKR_VAR_vc_cluster="CL" 
 export PKR_VAR_vc_network="VM Network" 
 
-
-# Windows settings 
+## Windows settings 
 export PKR_VAR_aws_w2k19_vm_name_prefix="changeme" 
 export PKR_VAR_aws_w2k22_vm_name_prefix="changeme"
 export PKR_VAR_new_win_admin_password="changeme" 
