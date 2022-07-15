@@ -44,8 +44,10 @@ As recorded in environment.env in root directory
 * export PKR_VAR_linux_root_password="changeme"
 
 ## vSphere settings
+* export PKR_VAR_vsphere_centos8_vm_name_prefix="changeme" 
 * export PKR_VAR_vsphere_centos8_iso="changeme"
 * export PKR_VAR_vsphere_centos8_checksum="changeme"
+* export PKR_VAR_vsphere_rocky8_vm_name_prefix="changeme"
 * export PKR_VAR_vsphere_rocky8_iso="changeme"
 * export PKR_VAR_vsphere_rocky8_checksum="changeme"
 * export PKR_VAR_vsphere_rhel8_vm_name_prefix="changeme"
@@ -61,16 +63,14 @@ As recorded in environment.env in root directory
 * export PKR_VAR_vc_network="VM Network" 
 
 ## Windows settings 
-* export PKR_VAR_aws_w2k19_vm_name_prefix="changeme" 
-* export PKR_VAR_aws_w2k22_vm_name_prefix="changeme"
 * export PKR_VAR_new_win_admin_password="changeme" 
+* export PKR_VAR_aws_w2k19_vm_name_prefix="changeme" 
 * export PKR_VAR_vsphere_win2k19_vm_cpu_num="2" 
 * export PKR_VAR_vsphere_win2k19_vm_mem_size="8192" 
 * export PKR_VAR_vsphere_win2k19_os_iso_path="[datastore1] ISO/W2k19.iso"
 * export PKR_VAR_vsphere_win2k19_vm_disk_size="100" 
-* export PKR_VAR_vsphere_centos8_vm_name_prefix="changeme" 
-* export PKR_VAR_vsphere_rocky8_vm_name_prefix="changeme" 
 * export PKR_VAR_vsphere_win2k19_vm_name_prefix="changeme" 
+* export PKR_VAR_aws_w2k22_vm_name_prefix="changeme"
 * export PKR_VAR_vsphere_win2k22_vm_cpu_num="2" 
 * export PKR_VAR_vsphere_win2k22_vm_mem_size="8192" 
 * export PKR_VAR_vsphere_win2k22_os_iso_path="[datastore1] ISO/W2k22.iso" 
