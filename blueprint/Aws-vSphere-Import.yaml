@@ -1,0 +1,52 @@
+formatVersion: 1
+inputs:
+  username:
+    type: string
+    title: Username
+    default: saltstack
+  password:
+    type: string
+    title: Password
+    encrypted: true
+    default: VMware1!
+resources:
+  Cloud_Machine_1:
+    type: Cloud.Machine
+    metadata:
+      layoutPosition:
+        - 0
+        - 0
+    properties:
+      image: Aws-vSphere-Import
+      flavor: generic.small
+      cloudConfig: |
+        #cloud-config
+        chpasswd: { expire: False }
+        ssh_pwauth: True
+        users:
+          - default
+          - name: ${input.username}
+            passwd: ${input.password}
+            sudo: ['ALL=(ALL) NOPASSWD:ALL']
+            groups: [wheel, sudo, admin]
+            shell: '/bin/bash'
+            lock_passwd:  false
+            ssh_authorized_keys:
+              - ${secret.dag-payg-ssh-bastion}
+        preserve_hostname:  false
+        chpasswd:
+          list: |
+            ${input.username}:${input.password}
+          expire:  False
+      networks:
+        - network: ${resource.Cloud_Network_1.id}
+  Cloud_Network_1:
+    type: Cloud.Network
+    metadata:
+      layoutPosition:
+        - 1
+        - 0
+    properties:
+      networkType: existing
+      constraints:
+        - tag: network:dag-payg-public

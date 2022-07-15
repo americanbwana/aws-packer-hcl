@@ -342,38 +342,21 @@ build {
   }
 
   # export Rhel8 into AWS
-  # post-processor "amazon-import" {
-  #   only = ["vsphere-iso.Aws-Rhel8"]
-  #   region = "us-east-1"
-  #   access_key = "${var.amazon_import_key_id}"
-  #   secret_key = "${var.amazon_import_secret}"
-  #   s3_bucket_name = "${var.amazon_import_s3_bucket}"
-  #   license_type = "BYOL"
-  #   role_name = "vmimport"
-  #   format = "vmdk"
-  #   boot_mode = "legacy-bios"
-  #   ami_name = "${var.vsphere_rhel8_vm_name_prefix}-${var.BUILDTIME}"
-  #   tags = {
-  #     "source": "Packer-Import"
-  #   }
+  post-processor "amazon-import" {
+    only = ["vsphere-iso.Aws-Rhel8"]
+    region = "${var.aws_region}"
+    access_key = "${var.amazon_import_key_id}"
+    secret_key = "${var.amazon_import_secret}"
+    s3_bucket_name = "${var.amazon_import_s3_bucket}"
+    license_type = "BYOL"
+    role_name = "vmimport"
+    format = "vmdk"
+    boot_mode = "legacy-bios"
+    tags = {
+      "source": "Packer-Import"
+    }
 
-  # }
-  # [
-  #    [
-  #       {
-  #         "type": "amazon-import",
-  #         "access_key": "YOUR KEY HERE",
-  #         "secret_key": "YOUR SECRET KEY HERE",
-  #         "region": "us-east-1",
-  #         "s3_bucket_name": "importbucket",
-  #         "license_type": "BYOL",
-  #         "tags": {
-  #           "Description": "packer amazon-import {{timestamp}}"
-  #         }
-  #      }
-  #   ]
-  # ]
-
+  }
 }
 
 

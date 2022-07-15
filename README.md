@@ -1,5 +1,16 @@
+# readme
+This working repository holds packer configuration files to build images
+for vRealize Automation Cloud.
+
+## Directory structure
+- Cloud-init. Cloud-init examples.
+- blueprint. vRealize Automation Cloud blueprint examples.
+- docker. Dockerfile to build image for Image as Code pipeline.
+- packer. Packer files to build.
+
+## Required Environmental Variables
 # AWS 
-## Wait an hour for long running AWS processes.
+Wait an hour for long running AWS processes.
 AWS_MAX_ATTEMPTS=30
 AWS_POLL_DELAY_SECONDS=120
 export PKR_VAR_aws_secret_key="changeme"
@@ -62,7 +73,3 @@ export PKR_VAR_vsphere_win2k22_vm_mem_size="8192"
 export PKR_VAR_vsphere_win2k22_os_iso_path="[datastore1] ISO/W2k22.iso" 
 export PKR_VAR_sphere_win2k22_vm_disk_size="153600"
 export PKR_VAR_vsphere_win2k22_vm_name_prefix="changeme" 
-
-
-
-

@@ -125,7 +125,7 @@ variable "vsphere_win2k19_vm_mem_size" {
     default = 8192
 }
 variable "vsphere_win2k19_os_iso_path" {
-    default = "[datastore1] ISO/W2k19.iso "
+    default = "[datastore1] ISO/W2k19.iso"
 }
 variable "vsphere_win2k19_vm_disk_size" {
     default = 100
@@ -148,7 +148,7 @@ variable "vsphere_win2k22_vm_mem_size" {
     default = 8192
 }
 variable "vsphere_win2k22_os_iso_path" {
-    default = "[datastore1] ISO/W2k22.iso "
+    default = "[datastore1] ISO/W2k22.iso"
 }
 variable "vsphere_win2k22_vm_disk_size" {
     default = 153600

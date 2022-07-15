@@ -13,3 +13,5 @@ variables.txt
 # ignore output_vsphere
 packer/all/output_vsphere
 
+# Ignore CODE workspace files
+aws-packer-hcl.code-workspace
