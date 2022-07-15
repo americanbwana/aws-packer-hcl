@@ -1,0 +1,14 @@
+#cloud-config
+users:
+  - default
+  - name: ansibleuser
+    password: br0wNGoffer$
+    groups: [ wheel, sudo, admin ]
+    chpasswd: { expire: False }
+    lock-passwd: False
+    ssh-passwd: True
+    sudo:
+      - "ALL=(ALL) NOPASSWD: ALL"
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ssh-rsa AAAAB...ChangeMe
